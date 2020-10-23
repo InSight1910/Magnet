@@ -12,6 +12,8 @@ from utils import auth
 from models import DogHouse
 
 
+
+
 def main():
     """
     This file should not be modified. This should be executed
@@ -20,7 +22,8 @@ def main():
     """
     # get credentials
     email = input('What\'s is your email? ')
-    password = getpass('What\'s is your password? ')
+    #password = getpass('What\'s is your password? ')
+    password = input('What\'s is your password? ')
     credentials = {
         'email': email,
         'password': password,
@@ -31,10 +34,12 @@ def main():
 
     # create dog house and pull data from api
     dog_house = DogHouse()
-    dog_house.get_data(token=token)
+    """ dog_house.get_data(token=token) """
 
     # results
+    dog_house.get_data(token);
     total_breeds = dog_house.get_total_breeds()
+    """ 
     total_dogs = dog_house.get_total_dogs()
     common_breed = dog_house.get_common_breed()
     common_dog_name = dog_house.get_common_dog_name()
@@ -52,7 +57,7 @@ def main():
         'common_dog_name': common_dog_name,
     }
     dog_house.send_data(data=data, token=token)
-
+ """
 
 if __name__ == '__main__':
     main()

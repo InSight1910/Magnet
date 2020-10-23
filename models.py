@@ -4,6 +4,8 @@ from utils import post
 
 # typing
 from typing import List
+import requests
+import json
 
 
 class Dog(object):
@@ -22,6 +24,8 @@ class Dog(object):
         self.id = id
         self.name = name
         self.breed = breed
+    
+
 
 
 class Breed(object):
@@ -93,13 +97,35 @@ class DogHouse(object):
         the information, also consider the dogs and breeds fields
         of the DogHouse class to perform data manipulation.
         """
-        raise NotImplementedError
+        url = "https://dogs.magnet.cl/api/v1/";
+        headers = {'Content-Type': 'application/json',
+                   'Authorization': 'JWT {0}'.format(token)}
+        responseDog = requests.get(url+'dogs', headers=headers) 
+        responseBreed = requests.get(url+'breeds',headers=headers)
+        dataDog=responseDog.json()
+        dataBreed=responseBreed.json()
+        for da in dataDog['results']:
+            dog = Dog(id=da['id'], name=da['name'], breed=da['breed'])
+            self.dogs.append(dog)
+        for da in dataBreed['results']:
+            breed = Breed(id=da['id'], name=da['name'])
+            self.breeds.append(breed)
+        
+        
 
+    UwU = []
     def get_total_breeds(self) -> int:
         """
         Returns the amount of different breeds in the doghouse
         """
-        raise NotImplementedError
+        i  = 0
+        while i < 5:
+            count = self.dogs[0].count(i)
+            print(count)
+            i+=1
+
+        
+        
 
     def get_total_dogs(self) -> int:
         """
