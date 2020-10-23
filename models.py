@@ -4,8 +4,11 @@ from utils import post
 
 # typing
 from typing import List
+
 import requests
 import json
+import statistics 
+from statistics import mode 
 
 
 class Dog(object):
@@ -100,50 +103,69 @@ class DogHouse(object):
         url = "https://dogs.magnet.cl/api/v1/";
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'JWT {0}'.format(token)}
-        responseDog = requests.get(url+'dogs', headers=headers) 
-        responseBreed = requests.get(url+'breeds',headers=headers)
-        dataDog=responseDog.json()
-        dataBreed=responseBreed.json()
-        for da in dataDog['results']:
+        responseDog = get(url=url+'dogs/', token=token)
+        responseBreed = get(url=url+'breeds/',token=token)
+        
+        for da in responseDog['results']:
             dog = Dog(id=da['id'], name=da['name'], breed=da['breed'])
             self.dogs.append(dog)
-        for da in dataBreed['results']:
+        for da in responseBreed['results']:
             breed = Breed(id=da['id'], name=da['name'])
+
             self.breeds.append(breed)
         
         
+        
 
-    UwU = []
+    
     def get_total_breeds(self) -> int:
         """
         Returns the amount of different breeds in the doghouse
         """
-        i  = 0
-        while i < 5:
-            count = self.dogs[0].count(i)
-            print(count)
-            i+=1
-
-        
-        
-
+        return len(self.breeds)
     def get_total_dogs(self) -> int:
         """
         Returns the amount of dogs in the doghouse
         """
-        raise NotImplementedError
+        return len(self.dogs)
 
     def get_common_breed(self) -> Breed:
         """
         Returns the most common breed in the doghouse
         """
-        raise NotImplementedError
+        
+        listt = []
+        for breedss in self.breeds:
+            z = 0
+            for dogss in self.dogs:
+                if breedss.id == dogss.breed:
+                    z+=1;
+            data = {
+                'breed': breedss,
+                'amount': z
+            }
+            listt.append(data)
+        
+        
+        maxAmount = 0;
+        for x in listt:
+            if x['amount'] >= maxAmount:
+                maxAmount = x['amount']
+        for x in listt:
+            if maxAmount == x['amount']:
+                return x['breed']
+
+        
 
     def get_common_dog_name(self) -> str:
         """
         Returns the most common dog name in the doghouse
         """
-        raise NotImplementedError
+        name = []
+        for x in self.dogs:
+            name.append(x.name)
+        
+        return mode(name)
 
     def send_data(self, data: dict, token: str):
         """
@@ -152,4 +174,5 @@ class DogHouse(object):
 
         Important!! We don't tell you if the answer is correct
         """
-        raise NotImplementedError
+        url = "https://dogs.magnet.cl/api/v1/";
+        post(url=url+'answer/',data=data, token=token)
