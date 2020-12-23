@@ -59,6 +59,13 @@ class Breed(object):
 
     def dogs_count(self) -> int:
         return len(self.dogs)
+    
+    def __str__(self):
+        return str({
+            'id': self.id,
+            'name': self.name,
+            'dogs': self.dogs
+        })
 
 
 class DogHouse(object):
